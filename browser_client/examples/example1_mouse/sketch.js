@@ -25,7 +25,7 @@ let state = 1;
 // Use for developing without partner
 // This will mirror one user's mouse
 // and will ingnore the mouse over peer connection
-let mirror = true;
+let mirror = false;
 
 // Globals for lerping in heartbeat animation
 let step = 0.1;
@@ -57,11 +57,11 @@ function setup() {
 
   // Start socket client automatically on load
   // By default it connects to http://localhost:80
-  WebRTCPeerClient.initSocketClient();
+  // WebRTCPeerClient.initSocketClient();
 
   // To connect to server over public internet pass the ngrok address
   // See https://github.com/lisajamhoury/WebRTC-Simple-Peer-Examples#to-run-signal-server-online-with-ngrok
-  // WebRTCPeerClient.initSocketClient('http://xxxxxxxxx.ngrok.io');
+  WebRTCPeerClient.initSocketClient('https://50138ccef1d3.ngrok.io');
 
   // Start the peer client
   WebRTCPeerClient.initPeerClient();
