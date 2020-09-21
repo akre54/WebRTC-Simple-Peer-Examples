@@ -13,27 +13,7 @@
 /// <reference path="../shared/p5.d/p5.d.ts" />
 /// <reference path="../shared/p5.d/p5.global-mode.d.ts" />
 
-// Peer variables
-let startPeer;
-let partnerMousePosition;
-let myMousePosition = {};
-
-// What interaction are we running?
-// We start with interaction 1
-let state = 1;
-
-// Use for developing without partner
-// This will mirror one user's mouse
-// and will ingnore the mouse over peer connection
-let mirror = false;
-
-// Globals for lerping in heartbeat animation
-let step = 0.1;
-let amount = 0;
-
-// Globals for growing animation
-const origSize = 50;
-let size = origSize;
+const localVideo = document.getElementById("local-video");
 
 // Setup() is a p5 function
 // See this example if this is new to you
@@ -54,15 +34,15 @@ function setup() {
 
   // To connect to server over public internet pass the ngrok address
   // See https://github.com/lisajamhoury/WebRTC-Simple-Peer-Examples#to-run-signal-server-online-with-ngrok
-  WebRTCPeerClient.initSocketClient('https://8c6c8ed51c3c.ngrok.io');
+  WebRTCPeerClient.initSocketClient('https://b37a46966008.ngrok.io');
 
   // Start the peer client
-  WebRTCPeerClient.initPeerClient();
+  const stream = localVideo.srcObject;
+  WebRTCPeerClient.initPeerClient(stream);
 
   navigator.getUserMedia(
    { video: true, audio: true },
    stream => {
-     const localVideo = document.getElementById("local-video");
      if (localVideo) {
        localVideo.srcObject = stream;
      }
@@ -79,23 +59,34 @@ function draw() {
     return;
   }
 
+  // WebRTCPeerClient.sendData();
+
   // Get the incoming data from the peer connection
   const newData = WebRTCPeerClient.getData();
 
-  // Check if there's anything in the data;
-  if (newData === null) {
-    return;
-    // If there is data
-  } else {
-    // Get the mouse data from newData.data
-    // Note: newData.data is the data sent by user
-    // Note: newData.userId is the peer ID of the user
-    partnerMousePosition = newData.data;
-  }
+  sendVideo();
 
   // Draw a white background with alpha of 50
   background(255, 50);
 
   // Don't draw the stroke
   noStroke();
+}
+
+function sendVideo() {
+  // const peerConnection = new RTCPeerConnection(config);
+  // peerConnections[id] = peerConnection;
+    
+  // peerConnection.onicecandidate = event => {
+  //   if (event.candidate) {
+  //     socket.emit("candidate", id, event.candidate);
+  //   }
+  // };
+
+  // peerConnection
+  //   .createOffer()
+  //   .then(sdp => peerConnection.setLocalDescription(sdp))
+  //   .then(() => {
+  //     socket.emit("offer", id, peerConnection.localDescription);
+  //   });
 }

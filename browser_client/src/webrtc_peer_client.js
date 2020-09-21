@@ -13,6 +13,8 @@ let initPeerRequest = false;
 
 let debug = false;
 
+const remoteVideo = document.getElementById('remote-video');
+
 /////////////////// Client Signal Server Using Socket IO ///////////////////
 
 // starts socket client communication with signal server automatically
@@ -171,29 +173,12 @@ const sendSignal = (data, connection) => {
 
 const handleConnection = (data) => {
   console.log('SIMPLE PEER IS CONNECTED');
-
-  // const peerConnection = new RTCPeerConnection(config);
-  // peerConnections[id] = peerConnection;
-
-  // let stream = video.srcObject;
-  // stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
-    
-  // peerConnection.onicecandidate = event => {
-  //   if (event.candidate) {
-  //     socket.emit("candidate", id, event.candidate);
-  //   }
-  // };
-
-  // peerConnection
-  //   .createOffer()
-  //   .then(sdp => peerConnection.setLocalDescription(sdp))
-  //   .then(() => {
-  //     socket.emit("offer", id, peerConnection.localDescription);
-  //   });
+  debugger
 };
 
 const handleStream = (stream) => {
-  // remoteVideo.srcObject = stream;
+  debugger
+  remoteVideo.srcObject = stream;
 };
 
 const handleError = (err) => {
@@ -240,11 +225,12 @@ const closePeerConnection = () => {
   // peer = null;
 };
 
-function createPeerConnection(connection) {
+function createPeerConnection(connection, stream) {
   debug && console.log('creating simple peer');
 
   const peer = new Peer({
     initiator: connection.initiator,
+    stream,
   });
 
   // If initiator,peer.on'signal' will fire right away, if not it waits for signal
@@ -295,7 +281,7 @@ window.onbeforeunload = () => {
   terminateSession();
 };
 
-const attemptPeerStart = (connection) => {
+const attemptPeerStart = (connection, stream) => {
   debug &&
     console.log(
       'Attempting peer start',
@@ -306,14 +292,14 @@ const attemptPeerStart = (connection) => {
     debug && console.log('Creating peer connection');
     // log('initiator', initiator);
     // debug && console.log('YES creating from attempt peer start');
-    createPeerConnection(connection);
+    createPeerConnection(connection, stream);
   } else {
     // debug && console.log('NOT creating from attempt peer start');
     debug && console.log('Not creating peer connection');
   }
 };
 
-const initPeerClient = () => {
+const initPeerClient = (stream) => {
   debug &&
     console.log(
       'running init Peer Client. # of ' + connections.length,
@@ -324,7 +310,7 @@ const initPeerClient = () => {
     socket.emit('initiate peer', connections[i].room);
     // socket.to(connections[i].room).emit('initiate peer');
     if (connections[i].initiator) {
-      attemptPeerStart(connections[i]);
+      attemptPeerStart(connections[i], stream);
     }
   }
 };
@@ -337,6 +323,13 @@ const isInitiator = () => {
   return initiator;
 };
 
+const initVideo = (stream) => {
+  connections.forEach((connection) => {
+    createPeerConnection(connection, stream);
+    connection.peer.addStream(stream);
+  });
+};
+
 const getConnections = () => {
   return connections;
 };
@@ -344,6 +337,7 @@ const getConnections = () => {
 module.exports = {
   initSocketClient,
   initPeerClient,
+  initVideo,
   isInitiator,
   getConnections,
   sendData,

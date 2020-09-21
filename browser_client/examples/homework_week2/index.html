@@ -4,8 +4,10 @@
     <meta charset="UTF-8" />
     <title>Realtime communication with WebRTC</title>
     <style>
-      .local-video {
+      .video {
         background: lightblue;
+        height: 500px;
+        width: 500px;
       }
     </style>
   </head>
@@ -13,8 +15,8 @@
   <body>
     <h1>Peer to Peer Video chat</h1>
     <div class="video-container">
-      <video autoplay class="remote-video" id="remote-video"></video>
-      <video autoplay muted class="local-video" id="local-video"></video>
+      <video autoplay class="video" id="remote-video"></video>
+      <video autoplay muted class="video" id="local-video"></video>
     </div>
     <script src="../shared/webrtc_peer_client.js"></script>
     <!-- <script src="../shared/p5.min.js"></script> -->
