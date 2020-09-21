@@ -1,4 +1,4 @@
-const DEBUG = false;
+const DEBUG = true;
 
 let rooms = [];
 let roomCounter = 0;

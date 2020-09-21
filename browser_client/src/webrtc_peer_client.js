@@ -171,6 +171,25 @@ const sendSignal = (data, connection) => {
 
 const handleConnection = (data) => {
   console.log('SIMPLE PEER IS CONNECTED');
+
+  // const peerConnection = new RTCPeerConnection(config);
+  // peerConnections[id] = peerConnection;
+
+  // let stream = video.srcObject;
+  // stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
+    
+  // peerConnection.onicecandidate = event => {
+  //   if (event.candidate) {
+  //     socket.emit("candidate", id, event.candidate);
+  //   }
+  // };
+
+  // peerConnection
+  //   .createOffer()
+  //   .then(sdp => peerConnection.setLocalDescription(sdp))
+  //   .then(() => {
+  //     socket.emit("offer", id, peerConnection.localDescription);
+  //   });
 };
 
 const handleStream = (stream) => {
@@ -182,6 +201,7 @@ const handleError = (err) => {
 };
 
 const handleData = (data) => {
+  debugger
   const decodedString = new TextDecoder('utf-8').decode(data);
   const decodedJSON = JSON.parse(decodedString);
   newData = decodedJSON;
@@ -317,12 +337,17 @@ const isInitiator = () => {
   return initiator;
 };
 
+const getConnections = () => {
+  return connections;
+};
+
 module.exports = {
-  initSocketClient: initSocketClient,
-  initPeerClient: initPeerClient,
-  isInitiator: isInitiator,
-  sendData: sendData,
-  getData: getData,
-  isPeerStarted: isPeerStarted,
-  setDebug: setDebug,
+  initSocketClient,
+  initPeerClient,
+  isInitiator,
+  getConnections,
+  sendData,
+  getData,
+  isPeerStarted,
+  setDebug,
 };
